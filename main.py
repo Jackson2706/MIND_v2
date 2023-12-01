@@ -39,7 +39,7 @@ def main():
     if not os.path.exists("./pkl/glove_dict.pkl"):
         glove_dict_path = glovePKL(glove_url, pkl_dir)
         print(f"Glove dict path: {glove_dict_path}")
-    # behavior_preprocessing(data_path=data_dir, pkl_dir=pkl_dir)
+    behavior_preprocessing(data_path=data_dir, pkl_dir=pkl_dir)
     news_preprocessing(data_path=data_dir, pkl_path=pkl_dir)
 
 

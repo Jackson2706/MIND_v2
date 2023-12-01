@@ -1,7 +1,6 @@
 import os
 import pickle
 import zipfile
-from glob import glob
 from urllib import request
 
 import numpy as np
