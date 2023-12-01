@@ -28,6 +28,7 @@ def save_category_subcategory(
     category_id_path = os.path.join(pkl_dir, "category_id.pkl")
     f = open(category_id_path, "wb")
     pickle.dump(category_dict, f)
+    f.close()
 
     # Create a dictionary with key is id and value is subcategory element
     id2subcategory = dict(zip(range(len(subcate_all)), subcate_all))
@@ -44,7 +45,7 @@ def save_category_subcategory(
     subcategory_id_path = os.path.join(pkl_dir, "subcategory_id.pkl")
     f = open(subcategory_id_path, "wb")
     pickle.dump(subcategory_dict, f)
-
+    f.close()
     # Create a dicttionary with key is newid and value is category_id
     cateid = category.apply(lambda x: category2id[x])
     new2categoryid = dict(zip(newsid, cateid))
@@ -53,7 +54,7 @@ def save_category_subcategory(
     newID_catgoryID_path = os.path.join(pkl_dir, "newID_catgoryID.pkl")
     f = open(newID_catgoryID_path, "wb")
     pickle.dump(new2categoryid, f)
-
+    f.close()
     # Create a dictionary with key is new id and value is subcatgory_id
     subcateid = subcategory.apply(lambda x: subcategory2id[x])
     new2subcategoryid = dict(zip(newsid, subcateid))
@@ -91,11 +92,10 @@ def save_word_embeddings(
     word_vocab = list(set(np.concatenate(np.array(words, dtype=object))))
     # Load word embeding from glove
     glove_dict_path = os.path.join(pkl_dir, "glove_dict.pkl")
-    print(glove_dict_path)
     f = open(glove_dict_path, "rb")
     glove = pickle.load(f)  # Datatype: Dictionary
     glove_keys = glove.keys()
-
+    f.close()
     # Remove element which is not existed in embeding word
     word_vocab = [i for i in word_vocab if i in glove_keys]
 
@@ -117,7 +117,7 @@ def save_word_embeddings(
     f = open(word_dictionary_path, "wb")
     pickle.dump(word_dict, f)
     print("Generated word dictionary !")
-
+    f.close()
     # convert each word in titile or abstract to id in word dictionary
     split = split.apply(lambda x: [word2id[i] for i in x if i in word_vocab])
 
@@ -151,7 +151,7 @@ def save_entity(newsdata, data_dir, pkl_dir):
     entityID_id_path = os.path.join(pkl_dir, "entityID_id.pkl")
     f = open(entityID_id_path, "wb")
     pickle.dump(entity_dict, f)
-
+    f.close()
     # Create a numpy array to save vector matching each enity_ID and save .npy file
     entity["vector"] = entity.iloc[:, 1:101].values.tolist()
     entity["id"] = entity[0].apply(lambda x: entityID2id[x])
@@ -215,7 +215,7 @@ def save_entity(newsdata, data_dir, pkl_dir):
     )
     f = open(newsID_titleEntityId_conf_path, "wb")
     pickle.dump(news_title_entity, f)
-
+    f.close()
     # Same as the task above, but target is Astract Entities
     newsdata = newsdata.copy()
     newsdata["AbstractEntities"] = newsdata["AbstractEntities"].apply(

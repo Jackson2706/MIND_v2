@@ -32,6 +32,7 @@ def main():
         print("Found the path of dataset ---> Skipping the dataset processing")
 
     # Glove dict
+    print("*" * 100)
     pkl_dir = args.pkl_dir
     glove_url = args.glove_url
     if not os.path.exists(pkl_dir):
@@ -39,7 +40,9 @@ def main():
     if not os.path.exists("./pkl/glove_dict.pkl"):
         glove_dict_path = glovePKL(glove_url, pkl_dir)
         print(f"Glove dict path: {glove_dict_path}")
+    print("*" * 100)
     behavior_preprocessing(data_path=data_dir, pkl_dir=pkl_dir)
+    print("*" * 100)
     news_preprocessing(data_path=data_dir, pkl_path=pkl_dir)
 
 

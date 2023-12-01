@@ -112,6 +112,7 @@ def preprocess(
     f = open(os.path.join(save_folder_dir, data_name + ".pkl"), "wb")
     data = {data_name: mat_data}
     pickle.dump(data, f)
+    f.close()
 
 
 def behavior_preprocessing(data_path, pkl_dir):
