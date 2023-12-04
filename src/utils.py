@@ -6,7 +6,7 @@ import torch
 import torch.nn.functional as F
 import torch.utils.data as Data
 
-from NRMS import NewsEncoder, NRMS_new, TextEncoder
+from src.NRMS import NewsEncoder, NRMS_new, TextEncoder
 
 "the difference between evaluation and validation is batch_user_valid does not contain just five news (one pos + four neg)"
 "batch_user_valid need to be padded to the length of the longest sequence"
@@ -278,9 +278,7 @@ def train(
 ):
     model.train()
     summ = []
-    for step, (batch_x, batch_y) in enumerate(
-        loader
-    ):  # batch_x: index of batch data
+    for step, batch_x in enumerate(loader):  # batch_x: index of batch data
         print(
             "Epoch: ",
             epoch,
@@ -288,7 +286,7 @@ def train(
             step + 1,
             "/" + str(num_iterations),
         )
-        processed_data = process_batch_data(train_data, batch_x.numpy())
+        processed_data = process_batch_data(train_data, batch_x[0].numpy())
         batch_user_history = processed_data[0]
         batch_user_short = processed_data[1]
         user_history_mask_selfattn = processed_data[2]
@@ -325,12 +323,12 @@ def train(
             + "/"
             + str(num_iterations)
             + "-th interation: loss: "
-            + str(loss.data[0])
+            + str(loss.item())
             + "\n"
         )
         loss.backward()
         optimizer.step()
-        summ.append(loss.data[0])
+        summ.append(loss.item())
     average_loss = np.mean(summ)
     return average_loss
 
@@ -397,9 +395,7 @@ def train_and_evaluate(
     vali_loss_epoch = []
 
     train_data_index = torch.IntTensor(np.array(range(len(training_data))))
-    train_data_index = Data.TensorDataset(
-        data_tensor=train_data_index, target_tensor=train_data_index
-    )
+    train_data_index = Data.TensorDataset(train_data_index)
     train_loader = Data.DataLoader(
         dataset=train_data_index,
         batch_size=batch_size,
@@ -409,9 +405,7 @@ def train_and_evaluate(
     )
 
     validate_data_index = torch.IntTensor(np.array(range(len(validation_data))))
-    validate_data_index = Data.TensorDataset(
-        data_tensor=validate_data_index, target_tensor=validate_data_index
-    )
+    validate_data_index = Data.TensorDataset(validate_data_index)
     vali_loader = Data.DataLoader(
         dataset=validate_data_index,
         batch_size=batch_size,

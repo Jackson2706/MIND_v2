@@ -36,7 +36,7 @@ class MultiHeadedAttention(nn.Module):
                 - h: int, is the number of head, simply, input is splitted into h parts with these relations
                 - d_model: int, is ther dimension of output when pass input through this model
         """
-        super(MultiheadedAttention, self).__init__()
+        super(MultiHeadedAttention, self).__init__()
         self.d_k = d_model // h
         self.h = h
         self.dropout = nn.Dropout(p=dropout)
@@ -52,7 +52,7 @@ class MultiHeadedAttention(nn.Module):
         """
 
         if mask is not None:
-            mask = mask.unqueeze(
+            mask = mask.unsqueeze(
                 1
             )  # TODO: need find the reason of inqueezing index 1
         nbatches = query.size(0)

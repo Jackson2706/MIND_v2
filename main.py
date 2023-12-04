@@ -12,7 +12,7 @@ from src.data_preprocessing.behavior_preprocess_evaluation import (
 from src.data_preprocessing.news_preprocess import news_preprocessing
 from src.glove.generate_glove_dict import glovePKL
 from src.mind import download_extract_small_mind
-from utils import train_and_evaluate
+from src.utils import train_and_evaluate
 
 
 def main():
@@ -176,10 +176,23 @@ def main():
         help="the name of the loss file",
     )
     parser.add_argument(
+        "--model_name",
+        type=str,
+        default="NRMS_new.pkl",
+        help="the name of trained model",
+    )
+
+    parser.add_argument(
         "--ranking_name",
         type=str,
         default="prediction.txt",
         help="the name of the prediction file",
+    )
+    parser.add_argument(
+        "--subcategory_id",
+        type=str,
+        default="./pkl/subcategory_id.pkl",
+        help="subcategory_id dictionary",
     )
     args = parser.parse_args()
     data_dir = args.data_dir
@@ -205,7 +218,7 @@ def main():
     glove_url = args.glove_url
     if not os.path.exists(pkl_dir):
         os.mkdir(pkl_dir)
-    if not len(pkl_dir + "./*.pkl") + len(pkl_dir + "./*.npy"):
+    if not len(glob(pkl_dir + "/*.pkl")) + len(glob(pkl_dir + "/*.npy")) == 18:
         glove_dict_path = glovePKL(glove_url, pkl_dir)
         print(f"Glove dict path: {glove_dict_path}")
         print("*" * 100)
@@ -217,7 +230,7 @@ def main():
         print("*" * 100)
     print("Loading the training data")
     f = open(args.training_data, "rb")
-    training_data = pickle.load(f)["training_data"]
+    training_data = pickle.load(f)["data_train"]
     f.close()
 
     print("*" * 100)
@@ -244,17 +257,17 @@ def main():
 
     f = open(args.category_id, "rb")
     category_id = pickle.load(f)
-    num_category = len(category_id["category_id"].keys())
+    num_category = len(category_id["category2id"].keys())
 
     f = open(args.subcategory_id, "rb")
     subcategory_id = pickle.load(f)
-    num_subcategory = len(subcategory_id["subcategory_id"].keys())
+    num_subcategory = len(subcategory_id["subcategory2id"].keys())
 
     print("*" * 100)
     print("Model training")
     batch_size = args.batch_size
-    training_data = np.array(training_data)
-    validation_data = np.array(validation_data)
+    training_data = np.array(training_data, dtype=object)
+    validation_data = np.array(validation_data, dtype=object)
     training_len = len(training_data)
     num_iterations = training_len // batch_size
     validation_len = len(validation_data)
