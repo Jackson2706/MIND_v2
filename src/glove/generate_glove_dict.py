@@ -16,6 +16,7 @@ def loadGloveModel(File):
         wordEmbedding = np.array([float(value) for value in splitLines[1:]])
         gloveModel[word] = wordEmbedding
     print(len(gloveModel), " words loaded!")
+    f.close()
     return gloveModel
 
 
@@ -36,6 +37,7 @@ def glovePKL(glove_url: str, save_folder_dir):
             glove_dict_path = os.path.join(save_folder_dir, "glove_dict.pkl")
             f = open(glove_dict_path, "wb")
             pickle.dump(glove, f)
+            f.close()
             return glove_dict_path
     return None
 
@@ -44,3 +46,4 @@ if __name__ == "__main__":
     glove = loadGloveModel("glove.840B.300d.txt")
     f = open("glove_dict.pkl", "wb")
     pickle.dump(glove, f)
+    f.close()
